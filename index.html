@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<script src="js/build/three.js"></script>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+
+			var loader = new THREE.FontLoader();
+			loader.load( 'js/examples/fonts/helvetiker_regular.typeface.js', function ( font ) {
+
+				init( font );
+
+			} );
+
+			function init(font) {
+				var textGeom = new THREE.TextGeometry( "Hello", {font: font, size: 10});
+				var material = new THREE.MeshPhongMaterial( { color: 0xffa500, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } );
+				var cube = new THREE.Mesh( geometry, material );
+				var text = new THREE.Mesh(textGeom,material);
+
+				var light = new THREE.AmbientLight( 0xFFFFFF ); // soft white light
+				scene.add( light );
+
+				text.position.z = -20;
+				text.position.x = -15;
+				text.position.y = 5;
+
+				text.geometry.applyMatrix(new THREE.Matrix4().makeTranslation( 0, -5, 0 ) );
+
+				text.scale.z = 0.05;
+				console.log(text);
+
+				scene.add(cube);
+				scene.add(text);
+
+				camera.position.z = 11;
+
+				window.addEventListener('keydown',function(e){
+					if (e.which === 38) {
+						camera.position.z++;
+					}
+					if (e.which === 40) {
+						camera.position.z--;
+					}
+				});
+
+				var direction = 1;
+				var render = function () {
+					requestAnimationFrame( render );
+
+					cube.rotation.x += 0.1;
+					cube.rotation.y += 0.1;
+
+					text.rotation.x += 0.1;
+
+					cube.position.z -= 0.1*direction;
+
+					if (cube.position.z < -10 || cube.position.z > 10) {
+						direction *= -1;
+					}
+
+					renderer.render(scene, camera);
+				};
+
+				render();
+			}
+
+
+		</script>
+	</body>
+</html>
