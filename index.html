@@ -25,7 +25,7 @@
 			} );
 
 			function init(font) {
-				var textGeom = new THREE.TextGeometry( "Hello", {font: font, size: 10});
+				var textGeom = new THREE.TextGeometry( "Hello world!", {font: font, size: 10});
 				var material = new THREE.MeshPhongMaterial( { color: 0xffa500, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } );
 				var cube = new THREE.Mesh( geometry, material );
 				var text = new THREE.Mesh(textGeom,material);
@@ -34,43 +34,79 @@
 				scene.add( light );
 
 				text.position.z = -20;
-				text.position.x = -15;
-				text.position.y = 5;
+				text.position.x = -35;
+				text.position.y = 50;
 
 				text.geometry.applyMatrix(new THREE.Matrix4().makeTranslation( 0, -5, 0 ) );
 
 				text.scale.z = 0.05;
 				console.log(text);
+			
+				var listener = new THREE.AudioListener();
+				camera.add( listener );
+			
+				var audioLoader = new THREE.AudioLoader();
+			
+				var sound1 = new THREE.PositionalAudio( listener );
+				audioLoader.load( 'engine.mp3', function( buffer ) {
+					sound1.setBuffer( buffer );
+					sound1.setRefDistance( 10 );
+					console.log(sound1);
+					sound1.source.loop = true;
+					sound1.play();
+				});
+				cube.add( sound1 );
 
 				scene.add(cube);
 				scene.add(text);
 
-				camera.position.z = 11;
+				camera.position.z = 503;
 
 				window.addEventListener('keydown',function(e){
 					if (e.which === 38) {
-						camera.position.z++;
+						camera.position.z--;
 					}
 					if (e.which === 40) {
-						camera.position.z--;
+						camera.position.z++;
 					}
 				});
 
 				var direction = 1;
+				var xDirection = 1;
+				var stop = false;
 				var render = function () {
-					requestAnimationFrame( render );
-
+					
+					
 					cube.rotation.x += 0.1;
-					cube.rotation.y += 0.1;
+					cube.rotation.y += 0.01;
 
 					text.rotation.x += 0.1;
-
-					cube.position.z -= 0.1*direction;
-
-					if (cube.position.z < -10 || cube.position.z > 10) {
-						direction *= -1;
+					
+					if (!stop) {
+						cube.position.z += 3*direction;	
 					}
-
+					
+					cube.position.x += 0.5*xDirection;
+					
+					if (cube.position.x > 10 || cube.position.x < -10) {
+						xDirection *= -1;
+					}
+					
+					if (cube.position.z > 500) {
+						stop = true;
+						cube.position.z = 500;
+						setTimeout(function(){
+							stop = false;
+							direction *= -1;
+						}, 3000);
+					}
+					
+					if (cube.position.z < -500) {
+						direction *= -1;
+						cube.position.z = -500;
+					}
+					
+					requestAnimationFrame( render );
 					renderer.render(scene, camera);
 				};
 
