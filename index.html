@@ -78,6 +78,9 @@ var stop = false;
 var render = function () {
     requestAnimationFrame( render );
 
+    demoCube.rotation.z += 0.1;
+    demoCube.rotation.x += 0.1;
+
     demoCube.position.x += 1*xDirection;
     if (demoCube.position.x > 20 || demoCube.position.x < -20) {
       xDirection *= -1;
