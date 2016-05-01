@@ -10,9 +10,9 @@ var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeig
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
+
 var skyGeometry = new THREE.BoxGeometry( 1, 1, 1 );
 var loader = new THREE.CubeTextureLoader();
-
 var path = "js/examples/textures/cube/Park3Med/";
 var format = '.jpg';
 var urls = [
@@ -20,16 +20,20 @@ var urls = [
     path + 'py' + format, path + 'ny' + format,
     path + 'pz' + format, path + 'nz' + format
   ];
+var textureCube = loader.load([
+  urls[1],
+  urls[0],
+  urls[3],
+  urls[2],
+  urls[4],
+  urls[5]
+]);
 
-  var textureCube = loader.load( [
-  urls[1],urls[0],urls[3],urls[2],urls[4],urls[5]
-  ] );
-
-var skyMaterial = new THREE.MeshBasicMaterial( {
-    color: 0xffffff,
-    envMap: textureCube,
-    side: THREE.BackSide
-} );
+var skyMaterial = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  envMap: textureCube,
+  side: THREE.BackSide
+});
 var skyCube = new THREE.Mesh( skyGeometry, skyMaterial );
 skyCube.scale.set(400,400,400);
 scene.add( skyCube );
@@ -38,7 +42,6 @@ camera.rotation.y = Math.PI;
 var demoMaterial = new THREE.MeshPhongMaterial( { color: 0xffa500, specular: 0x009900, shininess: 30, shading: THREE.SmoothShading } );
 var demoCube = new THREE.Mesh( skyGeometry, demoMaterial);
 demoCube.position.z = 20;
-
 scene.add(demoCube);
 
 var light = new THREE.AmbientLight( 0xFFFFFF ); // soft white light
@@ -75,20 +78,13 @@ var stop = false;
 var render = function () {
     requestAnimationFrame( render );
 
-    demoCube.rotation.x += 0.1;
-    demoCube.rotation.y += 0.01;
-
     demoCube.position.x += 1*xDirection;
-
     if (demoCube.position.x > 20 || demoCube.position.x < -20) {
       xDirection *= -1;
     }
-
-
     if (!stop) {
       demoCube.position.z += 1*direction;
     }
-
     if (demoCube.position.z > 200) {
       stop = true;
       demoCube.position.z = 200;
@@ -97,7 +93,6 @@ var render = function () {
         direction *= -1;
       }, 3000);
     }
-
     if (demoCube.position.z < 2) {
       stop = true;
       demoCube.position.z = 2;
@@ -108,7 +103,6 @@ var render = function () {
     }
 
     skyCube.position.copy(camera.position);
-
 
     renderer.render(scene, camera);
 };
