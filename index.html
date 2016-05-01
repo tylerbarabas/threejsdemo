@@ -51,7 +51,7 @@ var listener = new THREE.AudioListener();
 camera.add( listener );
 var audioLoader = new THREE.AudioLoader();
 var sound1 = new THREE.PositionalAudio( listener );
-audioLoader.load( 'engine.mp3', function( buffer ) {
+audioLoader.load( 'demosong.mp3', function( buffer ) {
   sound1.setBuffer( buffer );
   sound1.setRefDistance( 10 );
   sound1.source.loop = true;
@@ -86,7 +86,7 @@ var render = function () {
       xDirection *= -1;
     }
     if (!stop) {
-      demoCube.position.z += 1*direction;
+      demoCube.position.z += 3*direction;
     }
     if (demoCube.position.z > 200) {
       stop = true;
