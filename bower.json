@@ -1,0 +1,15 @@
+{
+  "name": "threejsdemo",
+  "homepage": "https://github.com/tylerbarabas/threejsdemo",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
