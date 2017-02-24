@@ -1,0 +1,74 @@
+<html>
+<head>
+  <script src="bower_components/threejs/build/three.js"></script>
+  <script src="bower_components/threejs/examples/js/controls/PointerLockControls.js"></script>
+</head>
+<body>
+<script>
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+var skyGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+var loader = new THREE.CubeTextureLoader();
+var path = "bower_components/threejs/examples/textures/cube/Park3Med/";
+var format = '.jpg';
+var urls = [
+    path + 'px' + format, path + 'nx' + format,
+    path + 'py' + format, path + 'ny' + format,
+    path + 'pz' + format, path + 'nz' + format
+  ];
+var textureCube = loader.load([
+  urls[1],
+  urls[0],
+  urls[3],
+  urls[2],
+  urls[4],
+  urls[5]
+]);
+
+var skyMaterial = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  envMap: textureCube,
+  side: THREE.BackSide
+});
+var skyCube = new THREE.Mesh( skyGeometry, skyMaterial );
+skyCube.scale.set(400,400,400);
+scene.add( skyCube );
+
+var controls = new THREE.PointerLockControls( camera );
+scene.add( controls.getObject() );
+controls.enabled = true;
+
+var light = new THREE.AmbientLight( 0xFFFFFF ); // soft white light
+scene.add( light );
+
+window.addEventListener('keydown',function(e){
+  switch (e.which) {
+    case 37: camera.rotation.y += 0.1;
+      break;
+    case 38: camera.rotation.x += 0.1;
+      break;
+    case 39: camera.rotation.y -= 0.1;
+      break;
+    case 40: camera.rotation.x -= 0.1;
+      break;
+  }
+});
+
+var render = function () {
+    requestAnimationFrame( render );
+
+    skyCube.position.copy(camera.position);
+
+    renderer.render(scene, camera);
+};
+
+render();
+
+</script>
+</body>
+</html>
