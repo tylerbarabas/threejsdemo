@@ -40,10 +40,18 @@
 
 		<script>
 
-			var camera, scene, renderer;
+			var camera, scene, renderer, mouseX, mouseY;
 
 			init();
 			animate();
+
+
+			function onDocumentMouseMove(event) {
+			        mouseX = (event.clientX - event.target.clientWidth  / 2) * 4;
+			        mouseY = (event.clientY - event.target.clientHeight / 2) * 4;
+				console.log(mouseX, mouseY);
+      			}
+			document.addEventListener('mousemove', onDocumentMouseMove);
 
 			function init() {
 
@@ -88,14 +96,13 @@
 
 			}
 
+			mouseX = 0;
+			mouseY = 0;
 			function update() {
-
-
-				/*
-				// distortion
-				camera.position.copy( camera.target ).negate();
-				*/
-
+				camera.rotation.y = -0.0002 * mouseX;
+				camera.rotation.x = -0.0002 * mouseY;
+				camera.position.x = -0.06 * mouseX;
+				camera.position.z = 350;
 				renderer.render( scene, camera );
 
 			}
